@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useWallet, CardanoWallet } from '@meshsdk/react';
-import { mintCertificate } from '@/lib/mintCertificate';
+import { mintCertificate } from '@/lib/mintCertificate'; // Your mint logic here
 import { buildCertificateMetadata } from '@/utils/metadataBuilder';
 
 export default function MintPage() {
@@ -13,35 +13,20 @@ export default function MintPage() {
   const [studentName, setStudentName] = useState('');
   const [course, setCourse] = useState('');
   const [date, setDate] = useState('');
-  const [imageBase64, setImageBase64] = useState('');
   const [txHash, setTxHash] = useState('');
   const [assetName, setAssetName] = useState('');
   const [loading, setLoading] = useState(false);
 
-  function handleImageUpload(event: React.ChangeEvent<HTMLInputElement>) {
-    const file = event.target.files?.[0];
-    if (!file) return;
-
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      const base64 = reader.result as string;
-      setImageBase64(base64); // includes data:image/png;base64,...
-    };
-    reader.readAsDataURL(file);
-  }
-
   async function handleMint() {
     if (!wallet) return alert('Please connect your wallet first');
-    if (!imageBase64) return alert('Please upload a certificate image');
 
     setLoading(true);
-    const metadata = buildCertificateMetadata(studentName, course, date, imageBase64);
+    const metadata = buildCertificateMetadata(studentName, course, date);
     try {
       const { txHash, assetName } = await mintCertificate(wallet, metadata);
       setTxHash(txHash);
       setAssetName(assetName);
     } catch (error) {
-      console.log(error);
       alert('Minting failed: ' + error);
     }
     setLoading(false);
@@ -56,7 +41,7 @@ export default function MintPage() {
           <CardanoWallet label="Connect Wallet" isDark={true} persist={true} />
           <button
             className="bg-green-600 text-white px-4 py-2 rounded mt-4"
-            onClick={() => connect('mesh')}
+            onClick={() => connect('mesh')} // Change 'mesh' if using another wallet
           >
             Connect Wallet
           </button>
@@ -83,17 +68,10 @@ export default function MintPage() {
             onChange={(e) => setCourse(e.target.value)}
           />
           <input
-            className="mb-2 w-full p-2 border"
+            className="mb-4 w-full p-2 border"
             placeholder="Date (YYYY-MM-DD)"
             value={date}
             onChange={(e) => setDate(e.target.value)}
-          />
-
-          <input
-            type="file"
-            accept="image/png"
-            className="mb-4 w-full p-2 border"
-            onChange={handleImageUpload}
           />
 
           <button

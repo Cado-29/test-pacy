@@ -48,22 +48,9 @@ function MintPage() {
     var _b = react_1.useState(''), studentName = _b[0], setStudentName = _b[1];
     var _c = react_1.useState(''), course = _c[0], setCourse = _c[1];
     var _d = react_1.useState(''), date = _d[0], setDate = _d[1];
-    var _e = react_1.useState(''), imageBase64 = _e[0], setImageBase64 = _e[1];
-    var _f = react_1.useState(''), txHash = _f[0], setTxHash = _f[1];
-    var _g = react_1.useState(''), assetName = _g[0], setAssetName = _g[1];
-    var _h = react_1.useState(false), loading = _h[0], setLoading = _h[1];
-    function handleImageUpload(event) {
-        var _a;
-        var file = (_a = event.target.files) === null || _a === void 0 ? void 0 : _a[0];
-        if (!file)
-            return;
-        var reader = new FileReader();
-        reader.onloadend = function () {
-            var base64 = reader.result;
-            setImageBase64(base64); // includes data:image/png;base64,...
-        };
-        reader.readAsDataURL(file);
-    }
+    var _e = react_1.useState(''), txHash = _e[0], setTxHash = _e[1];
+    var _f = react_1.useState(''), assetName = _f[0], setAssetName = _f[1];
+    var _g = react_1.useState(false), loading = _g[0], setLoading = _g[1];
     function handleMint() {
         return __awaiter(this, void 0, void 0, function () {
             var metadata, _a, txHash_1, assetName_1, error_1;
@@ -72,10 +59,8 @@ function MintPage() {
                     case 0:
                         if (!wallet)
                             return [2 /*return*/, alert('Please connect your wallet first')];
-                        if (!imageBase64)
-                            return [2 /*return*/, alert('Please upload a certificate image')];
                         setLoading(true);
-                        metadata = metadataBuilder_1.buildCertificateMetadata(studentName, course, date, imageBase64);
+                        metadata = metadataBuilder_1.buildCertificateMetadata(studentName, course, date);
                         _b.label = 1;
                     case 1:
                         _b.trys.push([1, 3, , 4]);
@@ -87,7 +72,6 @@ function MintPage() {
                         return [3 /*break*/, 4];
                     case 3:
                         error_1 = _b.sent();
-                        console.log(error_1);
                         alert('Minting failed: ' + error_1);
                         return [3 /*break*/, 4];
                     case 4:
@@ -105,8 +89,7 @@ function MintPage() {
             React.createElement("button", { className: "bg-red-600 text-white px-4 py-2 rounded mb-4", onClick: function () { return disconnect(); } }, "Disconnect Wallet"),
             React.createElement("input", { className: "mb-2 w-full p-2 border", placeholder: "Student Name", value: studentName, onChange: function (e) { return setStudentName(e.target.value); } }),
             React.createElement("input", { className: "mb-2 w-full p-2 border", placeholder: "Course", value: course, onChange: function (e) { return setCourse(e.target.value); } }),
-            React.createElement("input", { className: "mb-2 w-full p-2 border", placeholder: "Date (YYYY-MM-DD)", value: date, onChange: function (e) { return setDate(e.target.value); } }),
-            React.createElement("input", { type: "file", accept: "image/png", className: "mb-4 w-full p-2 border", onChange: handleImageUpload }),
+            React.createElement("input", { className: "mb-4 w-full p-2 border", placeholder: "Date (YYYY-MM-DD)", value: date, onChange: function (e) { return setDate(e.target.value); } }),
             React.createElement("button", { className: "bg-blue-600 text-white px-4 py-2 rounded", onClick: handleMint, disabled: loading }, loading ? 'Minting...' : 'Mint Certificate'),
             txHash && (React.createElement("div", { className: "mt-4" },
                 React.createElement("p", null, "\u2705 Minted successfully!"),
