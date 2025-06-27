@@ -1,7 +1,7 @@
 'use client';
 "use strict";
 exports.__esModule = true;
-require("./globals.css");
+require("../globals.css");
 require("@meshsdk/react/styles.css");
 var react_1 = require("@meshsdk/react");
 function RootLayout(_a) {
